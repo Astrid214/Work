@@ -65,3 +65,48 @@ replace science=1 if inlist(coursecode,"X30","X27","X28","X40","X75","S16","S47"
 replace science=1 if inlist(coursecode,"S46","S22","S35","S48","X37","S41","S96","S97","S19")
 replace science=1 if inlist(coursecode,"S40","S06","TR3","SBA","Y67")
 
+*CHECK
+tab title if ela==1
+tab title if math==1
+tab title if socialstudies==1
+tab title if science==1
+
+*CREATE ONE COMPREHENSIVE VAR FLAGGING CORE COURSES
+g corecourse="ELA" if ela==1
+replace corecourse="Math" if math==1
+replace corecourse="Social" if socialstudies==1
+replace corecourse="Science" if science==1
+*CHECK
+sort corecourse
+brow corecourse ela math socialstudies science
+
+*TRANSLATE ANY NUMERIC ENTRIES TO LETTER
+tab final_mark, missing
+replace final_mark="F" if final_mark=="3"
+*GENERATE FINAL MARK LIMITED TO FIRST CHARACTER
+g finalmark = substr(final_mark,1,1)
+drop final_mark
+*GENERATE PASSING FLAGS
+g passing=1 if inlist(finalmark,"A","B","C","D","P")
+replace passing=0 if finalmark=="F"
+
+*GENERATE SPECIFIC SUBJECT-PASS
+foreach x in algebrai algebraii geometry englishi englishii ela math socialstudies science{
+g `x'pass=1 if `x'==1&passing==1
+replace `x'pass=0 if `x'==1&passing==0
+}
+
+
+*GENERATE OVERALL PASSING FLAG TO PROVIDE CREDIT TO STUDENTS TAKING MULTIPLE COURSES-- IF THEY PASS ANY, THEY ARE CONSIDERED PASSING THE COURSE
+foreach x in algebrai algebraii geometry englishi englishii ela math socialstudies science{
+ bysort studentid school: egen `x'passoverall=max(`x'pass)
+ }
+ 
+*GENERATE FLAG FOR PASSING ALL FOUR CORE COURSES
+g passallcore=1 if (elapassoverall==1&mathpassoverall==1&socialstudiespassoverall==1&sciencepassoverall==1)
+replace passallcore=0 if passallcore~=1
+
+tempfile coursebase
+save `coursebase',replace
+clear
+
