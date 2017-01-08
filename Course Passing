@@ -110,3 +110,87 @@ tempfile coursebase
 save `coursebase',replace
 clear
 
+*MERGE ELL AND SPED STATUS UNTO BASEFILE
+import excel using "$inputs\SPED.ELL.FARM\SPED.ELL.xlsx", firstrow case(lower)
+keep student_id ell sped
+rename student_id studentid
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile ellsped
+save `ellsped',replace
+clear
+
+use `coursebase'
+merge m:1 studentid using `ellsped', keep(master match)
+drop _merge
+tempfile coursebase2
+save `coursebase2',replace
+clear
+
+*MERGE FARM STATUS UNTO BASEFILE
+import excel using "$inputs\SPED.ELL.FARM\SDC 07-14-2016.xlsx", firstrow case(lower)
+keep pupil_number farms
+rename pupil_number studentid
+*CREATE DUMMY VAR FOR FARM STATUS. STUDENTS WITH NULL STATUS ARE ASSIGNED AS MISSING AND WILL NOT BE INCLUDED IN THE ANALYSIS
+g farm=1 if farms=="Free"|farms=="Reduced"
+replace farm=0 if farms=="Pay All"
+replace farm=. if farms=="NULL" 
+tempfile farm
+save `farm',replace
+clear
+
+use `coursebase2'
+merge m:1 studentid using `farm', keep(master match)
+drop _merge
+tempfile coursebase3
+save `coursebase3',replace
+
+tab ell if algebrai==1| algebraii==1| geometry==1| englishi==1| englishii==1, missing
+tab ell if ela==1|math==1|socialstudies==1|science==1, missing
+tab sped if algebrai==1| algebraii==1| geometry==1| englishi==1| englishii==1, missing
+tab sped if ela==1|math==1|socialstudies==1|science==1, missing
+tab farms if algebrai==1| algebraii==1| geometry==1| englishi==1| englishii==1, missing
+tab farms if ela==1|math==1|socialstudies==1|science==1, missing
+brow if farms=="NULL" & (algebrai==1| algebraii==1| geometry==1| englishi==1| englishii==1)
+brow if farms=="NULL" & (ela==1| math==1| socialstudies==1| science==1)
+
+clear
+
+
+*TRANSFORM FILE LONG TO WIDE- SINGLE ROW PER STUDENT, SO CAN FLAG STUDENTS WHO HAVE TAKEN ALL 4 COURSES
+*WILL NEED TO ENSURE THAT NO MISSING RECORDS ON "CORECOURSE" VAR
+*ALSO ENSURE THAT NO DUPLICATE RECORDS ON "CORECOURSE" VAR FOR EACH STUDENT
+use `coursebase3'
+drop if corecourse==""
+sort studentid corecourse
+quietly by studentid corecourse: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+keep studentid corecourse coursecode title ela math socialstudies science
+reshape wide coursecode title ela math socialstudies science, i(studentid) j(corecourse) string
+brow
+
+*FLAG STUDENTS WHO HAVE ATTEMPTED ALL 4 CORE COURSES THIS SY
+g allcore=1 if elaELA==1&mathMath==1&socialstudiesSocial==1&scienceScience==1
+replace allcore=0 if allcore~=1
+
+*CHECK
+tab allcore if elaELA==1&mathMath==1&socialstudiesSocial==1&scienceScience==1
+sort allcore
+brow allcore titleELA elaELA titleMath mathMath titleScience scienceScience titleSocial socialstudiesSocial
+
+*CREATE TRUNCATED FILE AND APPEND ALLCORE VAR UNTO COMBINED FILE
+keep studentid allcore	
+tempfile allcore
+save `allcore',replace
+clear
+use `coursebase3'
+merge m:1 studentid using `allcore', keep(master match)
+drop _merge
+tempfile coursebase3
+save `coursebase3',replace
