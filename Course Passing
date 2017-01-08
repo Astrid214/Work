@@ -28,3 +28,40 @@ g geometry=1 if inlist(coursecode,"M31","M32","M34","MG1","MG2","MMY")
 g englishi=1 if inlist(coursecode,"E03","E09","E15","E16","E50","E95")
 g englishii=1 if inlist(coursecode,"E04","E17","E18","E36","E51")
 
+
+*GENERATE CORE COURSE FLAGS
+*WILL NEED TO BREAK UP INLIST EXPRESSION INTO SMALLER PARTS BECAUSE LIST IS TOO LONG.
+*LIMIT IS 9 COURSE CODES PER LIST
+
+g ela=1 if inlist(coursecode,"E01","E02","E48","E49","EE2","EM6","EP3","EP4","E08")
+replace ela=1 if inlist(coursecode,"E07","EP5","EP6","YGA","YGB","E50","E51","E52","E53")
+replace ela=1 if inlist(coursecode,"NE4","NE5","NE6","NE7","E03","E15","E16","E04","E17")
+replace ela=1 if inlist(coursecode,"E18","E05","E19","E20","E06","E21","E22","E09","E36")
+replace ela=1 if inlist(coursecode,"E37","E40","X01","X02","ES4")
+replace ela=. if school==360 & inlist(coursecode,"E48","E49","EM6")
+
+g math=1 if inlist(coursecode,"M06","M07","M08","MMX","MMY","MMU","MMV","MMW","M21")
+replace math=1 if inlist(coursecode,"MMX","MA1","NN2","MA2","M24","NN3","M41","M45","MA3")
+replace math=1 if inlist(coursecode,"MA4","M44","M61","M62","M64","M67","YGF","YGT","M54")
+replace math=1 if inlist(coursecode,"M52","NN1","M31","MG1","MG2","MMY","M34","M22","M42")
+replace math=1 if inlist(coursecode,"M32","M56","X41","X42","X43","X44","X48","M49","M51")
+replace math=1 if inlist(coursecode,"M57","MP1","MP2","M38","M36","M37","NN4")
+
+g socialstudies=1 if inlist(coursecode,"HC2","HC3","HC4","HP2","HP1","HQ3","HX7","HX8","HP4")
+replace socialstudies=1 if inlist(coursecode,"HM1","YGC","YGE","YGD","YGV","NH7","NH6","NH4","NH5")
+replace socialstudies=1 if inlist(coursecode,"HC9","HH1","HH4","X24","X23","HC8","HX5","HX6","HC7")
+replace socialstudies=1 if inlist(coursecode,"H23","HC5","HC6","HX1","HX3","HX4","HX2")
+replace socialstudies=1 if school==292 & inlist(coursecode,"L6H","L6L","L6S") 
+replace socialstudies=1 if school==360 & inlist(coursecode,"E48","E49","EM6")
+
+g science=1 if inlist(coursecode,"SS2","SS3","SS4","S17","S23","S33","S05","S72","S73")
+replace science=1 if inlist(coursecode,"S42","S71","S70","S32","S21","SB3","SB4","SB2","SZ1")
+replace science=1 if inlist(coursecode,"SZ2","SZ3","S31","SC2","S94","S95","YGG","YGH","YGJ")
+replace science=1 if inlist(coursecode,"YGW","YGR","YGK","SP2","S57","NS5","NS6","NS4","NS7")
+replace science=1 if inlist(coursecode,"S45","SR1","SR2","S20","SE2","S03","S68","ST4","S64")
+replace science=1 if inlist(coursecode,"SB7","SB8","OH6","ST5","ST6","ST7","ST3","ST8","S04")
+replace science=1 if inlist(coursecode,"OH4","OH5","S49","S58","OH3","S36","ST1","ST2","X29")
+replace science=1 if inlist(coursecode,"X30","X27","X28","X40","X75","S16","S47","SZ6","S56")
+replace science=1 if inlist(coursecode,"S46","S22","S35","S48","X37","S41","S96","S97","S19")
+replace science=1 if inlist(coursecode,"S40","S06","TR3","SBA","Y67")
+
