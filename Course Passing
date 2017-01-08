@@ -194,3 +194,213 @@ merge m:1 studentid using `allcore', keep(master match)
 drop _merge
 tempfile coursebase3
 save `coursebase3',replace
+
+******* OUTPUT EXCEL TABLES *******
+
+*ALGEBRA I
+use `coursebase3'
+keep if algebrai==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile algebrai
+save `algebrai',replace
+collapse (sum) algebrai algebraipassoverall, by (school)
+g perc_algebrai=algebraipassoverall/algebrai
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra I") sheetreplace
+clear
+use `algebrai'
+keep if ell=="Y"
+collapse (sum) algebrai algebraipassoverall, by (school)
+g perc_algebrai=algebraipassoverall/algebrai
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra I-ELL") sheetreplace
+clear
+use `algebrai'
+keep if sped=="Y"
+collapse (sum) algebrai algebraipassoverall, by (school)
+g perc_algebrai=algebraipassoverall/algebrai
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra I-SPED") sheetreplace
+clear
+use `algebrai'
+keep if farm==1
+collapse (sum) algebrai algebraipassoverall, by (school)
+g perc_algebrai=algebraipassoverall/algebrai
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra I-FARM") sheetreplace
+clear
+
+use `coursebase3'
+*ALGEBRA II
+keep if algebraii==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile algebraii
+save `algebraii',replace
+collapse (sum) algebraii algebraiipassoverall, by (school)
+g perc_algebraii=algebraiipassoverall/algebraii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra II") sheetreplace
+clear
+use `algebraii'
+keep if ell=="Y"
+collapse (sum) algebraii algebraiipassoverall, by (school)
+g perc_algebraii=algebraiipassoverall/algebraii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra II-ELL") sheetreplace
+clear
+use `algebraii'
+keep if sped=="Y"
+collapse (sum) algebraii algebraiipassoverall, by (school)
+g perc_algebraii=algebraiipassoverall/algebraii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra II-SPED") sheetreplace
+clear
+use `algebraii'
+keep if farm==1
+collapse (sum) algebraii algebraiipassoverall, by (school)
+g perc_algebraii=algebraiipassoverall/algebraii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Algebra II-FARM") sheetreplace
+clear
+
+
+use `coursebase3'
+*GEOMETRY
+keep if geometry==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile geometry
+save `geometry',replace
+collapse (sum) geometry geometrypassoverall, by (school)
+g perc_geometry=geometrypassoverall/geometry
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Geometry") sheetreplace
+clear
+use `geometry'
+keep if ell=="Y"
+collapse (sum) geometry geometrypassoverall, by (school)
+g perc_geometry=geometrypassoverall/geometry
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Geometry-ELL") sheetreplace
+clear
+use `geometry'
+keep if sped=="Y"
+collapse (sum) geometry geometrypassoverall, by (school)
+g perc_geometry=geometrypassoverall/geometry
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Geometry-SPED") sheetreplace
+clear
+use `geometry'
+keep if farm==1
+collapse (sum) geometry geometrypassoverall, by (school)
+g perc_geometry=geometrypassoverall/geometry
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-Geometry-FARM") sheetreplace
+clear
+
+
+use `coursebase3'
+*ENGLISH I
+keep if englishi==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile englishi
+save `englishi',replace
+collapse (sum) englishi englishipassoverall, by (school)
+g perc_englishi=englishipassoverall/englishi
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English I") sheetreplace
+clear
+use `englishi'
+keep if ell=="Y"
+collapse (sum) englishi englishipassoverall, by (school)
+g perc_englishi=englishipassoverall/englishi
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English I-ELL") sheetreplace
+clear
+use `englishi'
+keep if sped=="Y"
+collapse (sum) englishi englishipassoverall, by (school)
+g perc_englishi=englishipassoverall/englishi
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English I-SPED") sheetreplace
+clear
+use `englishi'
+keep if farm==1
+collapse (sum) englishi englishipassoverall, by (school)
+g perc_englishi=englishipassoverall/englishi
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English I-FARM") sheetreplace
+clear
+
+use `coursebase3'
+*ENGLISH II
+keep if englishii==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile englishii
+save `englishii',replace
+collapse (sum) englishii englishiipassoverall, by (school)
+g perc_englishii=englishiipassoverall/englishii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English II") sheetreplace
+clear
+use `englishii'
+keep if ell=="Y"
+collapse (sum) englishii englishiipassoverall, by (school)
+g perc_englishii=englishiipassoverall/englishii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English II-ELL") sheetreplace
+clear
+use `englishii'
+keep if sped=="Y"
+collapse (sum) englishii englishiipassoverall, by (school)
+g perc_englishii=englishiipassoverall/englishii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English II-SPED") sheetreplace
+clear
+use `englishii'
+keep if farm==1
+collapse (sum) englishii englishiipassoverall, by (school)
+g perc_englishii=englishiipassoverall/englishii
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-English II-FARM") sheetreplace
+clear
+
+
+use `coursebase3'
+*PASS ALL 4 CORE COURSES
+*ONLY KEEP STUDENTS WHO HAVE ATTEMPTED ALL 4 CORE COURSES
+keep if allcore==1
+*KEEP ONLY ONE RECORD SINCE ALL SPED AND ELL STATUSES WILL BE THE SAME FOR A STUDENT
+sort studentid 
+quietly by studentid: gen dup = cond(_N==1,0,_n)
+brow if dup>0
+drop if dup>1
+drop dup
+tempfile passallcore
+save `passallcore',replace
+collapse (count) total=studentid (sum) passallcore, by (school)
+g perc_passallcore=passallcore/total
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-ALLCORE") sheetreplace
+clear
+use `passallcore'
+keep if ell=="Y"
+collapse (count) total=studentid (sum) passallcore, by (school)
+g perc_passallcore=passallcore/total
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-ALLCORE-ELL") sheetreplace
+clear
+use `passallcore'
+keep if sped=="Y"
+collapse (count) total=studentid (sum) passallcore, by (school)
+g perc_passallcore=passallcore/total
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-ALLCORE-SPED") sheetreplace
+clear
+use `passallcore'
+keep if farm==1
+collapse (count) total=studentid (sum) passallcore, by (school)
+g perc_passallcore=passallcore/total
+export excel using "$outputs\Course Passing DRT QA.xlsx", firstrow(variables) sheet("CP-ALLCORE-FARM") sheetreplace
+clear
