@@ -1,0 +1,30 @@
+/*********************************************************************
+Course Passing QA
+Author: Astrid
+Date: 08/25/2016
+*********************************************************************/
+
+clear
+set more off
+
+*Set file paths
+global inputs "Z:\~Strategic Alignment & Performance Management\Data Librarian Files\DRTs\IMPACT\Course Passing"
+global outputs "Z:\~Strategic Alignment & Performance Management\Data Librarian Files\DRTs\IMPACT\Course Passing\QA"
+
+*TRUNCATE 2880 TO ONLY COURSES WITH FINAL MARKS
+import excel using "$inputs\DRT 2880 (2).xlsx", firstrow case(lower)
+keep pupil_number school course_code title credit_value subject_code semester term summer_course final_mark
+rename pupil_number studentid 
+*DROP COURSES WITHOUT FINAL MARK OR COURSES 
+keep if final_mark~=""
+drop if final_mark=="AUD"|final_mark=="W"|final_mark=="S"|final_mark=="U"
+*GENERATE COURSE CODE LIMITED TO THE FIRST THREE CODES
+g coursecode = substr(course_code,1,3)
+drop course_code
+*GENERATE COURSE FLAGS
+g algebrai=1 if inlist(coursecode,"M21","M22","M24","MA1","MA2","MMX")
+g algebraii=1 if inlist(coursecode,"M41","M42","M44","M45","MA3","MA4")
+g geometry=1 if inlist(coursecode,"M31","M32","M34","MG1","MG2","MMY")
+g englishi=1 if inlist(coursecode,"E03","E09","E15","E16","E50","E95")
+g englishii=1 if inlist(coursecode,"E04","E17","E18","E36","E51")
+
